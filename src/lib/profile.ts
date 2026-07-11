@@ -5,5 +5,5 @@ export const profile = {
   roleEn: "Career reflection and project retrospective",
   avatarUrl: "https://github.com/Xiao-air.png",
   githubUrl: "https://github.com/Xiao-air",
-  email: "replace-with-your-email@example.com"
+  email: ""
 };
