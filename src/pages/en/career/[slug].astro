@@ -1,0 +1,45 @@
+---
+import SiteLayout from "../../../layouts/SiteLayout.astro";
+import { getCareerEntries } from "../../../lib/career";
+import { careerPath } from "../../../lib/routes";
+
+export function getStaticPaths() {
+  return getCareerEntries("en").map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry }
+  }));
+}
+
+const { entry } = Astro.props;
+const Content = entry.Content;
+---
+
+<SiteLayout
+  locale="en"
+  slug={entry.slug}
+  title={`${entry.data.title} | Yichen Xiao`}
+  description={entry.data.summary}
+>
+  <article class="detail-page">
+    <a class="back-link" href="/en/">Back to timeline</a>
+    <header class="detail-header">
+      <p class="period">{entry.data.period}</p>
+      <h1>{entry.data.title}</h1>
+      <p>{entry.data.summary}</p>
+      <div class="card-meta">
+        {entry.data.skills.map((skill) => <span>{skill}</span>)}
+      </div>
+    </header>
+    <section class="impact-box">
+      <h2>Public Impact</h2>
+      <p>{entry.data.impact}</p>
+      <ul>
+        {entry.data.evidence.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+    <div class="markdown-body">
+      <Content />
+    </div>
+    <a class="button" href={careerPath("zh", entry.slug)}>阅读中文版</a>
+  </article>
+</SiteLayout>

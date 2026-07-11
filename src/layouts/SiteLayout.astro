@@ -1,0 +1,53 @@
+---
+import "../styles/global.css";
+import { homePath, languageSwitchPath, resumePath, type Locale } from "../lib/routes";
+import { profile } from "../lib/profile";
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  slug?: string;
+}
+
+const { locale, title, description, slug } = Astro.props;
+const isZh = locale === "zh";
+const switchPath = languageSwitchPath(locale, slug);
+const home = homePath(locale);
+const resume = resumePath(locale);
+---
+
+<!doctype html>
+<html lang={isZh ? "zh-CN" : "en"}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <link rel="icon" href={`${profile.avatarUrl}?size=64`} />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href={home} aria-label={isZh ? "返回首页" : "Back to home"}>
+        <img src={profile.avatarUrl} alt="" width="32" height="32" />
+        <span>{profile.name}</span>
+      </a>
+      <nav class="nav" aria-label={isZh ? "主导航" : "Main navigation"}>
+        <a href={home}>{isZh ? "时间线" : "Timeline"}</a>
+        <a href={resume}>{isZh ? "简历" : "Resume"}</a>
+        <a href={profile.githubUrl}>GitHub</a>
+        <a class="language-link" href={switchPath}>{isZh ? "EN" : "中文"}</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="footer">
+      <span>{profile.name} · {isZh ? "公开职业时间线" : "Public career timeline"}</span>
+      <a href={`mailto:${profile.email}`}>{profile.email}</a>
+    </footer>
+  </body>
+</html>

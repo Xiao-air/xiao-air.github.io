@@ -1,0 +1,16 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { profile } from "../lib/profile";
+---
+
+<SiteLayout locale="zh" title="简历 | Yichen Xiao" description="可公开简历入口。">
+  <section class="simple-page">
+    <p class="section-kicker">Resume</p>
+    <h1>公开简历入口</h1>
+    <p>请在确认隐私边界后，将公开版本简历 PDF 放入 `public/resume/`，并把这里替换为下载链接。</p>
+    <div class="actions">
+      <a class="button primary" href={profile.githubUrl}>GitHub</a>
+      <a class="button" href={`mailto:${profile.email}`}>{profile.email}</a>
+    </div>
+  </section>
+</SiteLayout>

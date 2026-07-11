@@ -1,0 +1,85 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { getCareerEntries, getFeaturedSkills } from "../lib/career";
+import { careerPath, resumePath, type Locale } from "../lib/routes";
+import { profile } from "../lib/profile";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const isZh = locale === "zh";
+const entries = getCareerEntries(locale);
+const skills = getFeaturedSkills(locale);
+const title = isZh ? `${profile.name} | 生涯回顾` : `${profile.name} | Career Timeline`;
+const description = isZh
+  ? "一个以职业时间线、项目复盘和成长证据为核心的双语个人网站。"
+  : "A bilingual personal site centered on career timeline, project reflection, and growth evidence.";
+---
+
+<SiteLayout locale={locale} title={title} description={description}>
+  <section class="intro-band">
+    <div class="intro-copy">
+      <p class="eyebrow">{isZh ? "Career Review / Resume Extension" : "Career Review / Resume Extension"}</p>
+      <h1>{isZh ? "把经历整理成可回顾、可证明、可规划的成长轨迹。" : "Turning experience into a timeline for reflection, evidence, and direction."}</h1>
+      <p class="lede">
+        {isZh
+          ? "这里记录精选项目、工作节点和能力主题。公开页面只呈现可展示版本，完整复盘和具体计划保存在私密库中。"
+          : "This site captures selected projects, work nodes, and capability themes. The public layer stays polished; full retrospectives and action plans remain private."}
+      </p>
+      <div class="actions" aria-label={isZh ? "主要链接" : "Primary links"}>
+        <a class="button primary" href="#timeline">{isZh ? "查看时间线" : "View timeline"}</a>
+        <a class="button" href={resumePath(locale)}>{isZh ? "查看简历" : "Resume"}</a>
+        <a class="button" href={profile.githubUrl}>GitHub</a>
+      </div>
+    </div>
+    <aside class="identity-panel" aria-label={isZh ? "个人概览" : "Profile summary"}>
+      <img src={profile.avatarUrl} alt={profile.name} width="144" height="144" />
+      <div>
+        <p class="panel-label">{profile.handle}</p>
+        <h2>{profile.name}</h2>
+        <p>{isZh ? profile.roleZh : profile.roleEn}</p>
+      </div>
+    </aside>
+  </section>
+
+  <section class="summary-grid" aria-label={isZh ? "能力摘要" : "Capability summary"}>
+    <div>
+      <p class="section-kicker">{isZh ? "能力标签" : "Capability Tags"}</p>
+      <div class="tag-cloud">
+        {skills.map((skill) => <span>{skill}</span>)}
+      </div>
+    </div>
+    <div>
+      <p class="section-kicker">{isZh ? "未来方向" : "Future Direction"}</p>
+      <p class="direction-text">
+        {isZh
+          ? "继续建设 AI 辅助的个人职业系统，让项目复盘、能力缺口和未来规划保持在同一条清晰脉络中。"
+          : "Continue building an AI-assisted career system that keeps project retrospectives, capability gaps, and future planning in one coherent thread."}
+      </p>
+    </div>
+  </section>
+
+  <section class="timeline-section" id="timeline">
+    <div class="section-heading">
+      <p class="section-kicker">{isZh ? "职业时间线" : "Career Timeline"}</p>
+      <h2>{isZh ? "精选项目 / 工作节点" : "Selected Project / Work Nodes"}</h2>
+    </div>
+    <div class="timeline-list">
+      {entries.map((entry) => (
+        <article class="timeline-card">
+          <div class="period">{entry.data.period}</div>
+          <div class="timeline-body">
+            <p class="role">{entry.data.role}</p>
+            <h3><a href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
+            <p>{entry.data.summary}</p>
+            <div class="card-meta">
+              {entry.data.skills.slice(0, 3).map((skill) => <span>{skill}</span>)}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+</SiteLayout>
