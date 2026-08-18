@@ -1,0 +1,40 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { currentFocusThemes, localize } from "../lib/public-profile";
+import { homePath, type Locale } from "../lib/routes";
+import { profile } from "../lib/profile";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const isZh = locale === "zh";
+const title = isZh ? `${profile.name} | 当前关注方向` : `${profile.name} | Current Focus`;
+const description = isZh
+  ? "当前正在探索的方向级主题。"
+  : "Direction-level themes currently being explored.";
+---
+
+<SiteLayout
+  locale={locale}
+  title={title}
+  description={description}
+  switchPath={locale === "zh" ? "/en/focus/" : "/focus/"}
+>
+  <section class="section-page">
+    <a class="back-link" href={homePath(locale)}>{isZh ? "返回首页" : "Back to home"}</a>
+    <div class="section-heading">
+      <p class="section-kicker">{isZh ? "当前关注方向" : "Current Focus"}</p>
+      <h1>{isZh ? "方向，不是任务清单" : "Direction, not a task list"}</h1>
+    </div>
+    <div class="focus-list panel-list">
+      {currentFocusThemes.map((theme) => (
+        <article>
+          <h2>{localize(theme.title, locale)}</h2>
+          <p>{localize(theme.description, locale)}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</SiteLayout>

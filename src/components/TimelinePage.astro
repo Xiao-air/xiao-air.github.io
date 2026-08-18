@@ -1,0 +1,50 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { getCareerEntries } from "../lib/career";
+import { careerPath, homePath, type Locale } from "../lib/routes";
+import { profile } from "../lib/profile";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const isZh = locale === "zh";
+const entries = getCareerEntries(locale);
+const title = isZh ? `${profile.name} | 职业时间线` : `${profile.name} | Career Timeline`;
+const description = isZh
+  ? "精选项目与工作节点的公开时间线。"
+  : "A public timeline of selected projects and work nodes.";
+---
+
+<SiteLayout
+  locale={locale}
+  title={title}
+  description={description}
+  switchPath={locale === "zh" ? "/en/timeline/" : "/timeline/"}
+>
+  <section class="section-page">
+    <a class="back-link" href={homePath(locale)}>{isZh ? "返回首页" : "Back to home"}</a>
+    <div class="section-heading">
+      <p class="section-kicker">{isZh ? "职业时间线" : "Career Timeline"}</p>
+      <h1>{isZh ? "精选项目 / 工作节点" : "Selected Project / Work Nodes"}</h1>
+    </div>
+    <ol class="timeline-list">
+      {entries.map((entry) => (
+        <li class="timeline-item">
+          <article class="timeline-card">
+            <div class="period">{entry.data.period}</div>
+            <div class="timeline-body">
+              <p class="role">{entry.data.role}</p>
+              <h3><a href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
+              <p>{entry.data.summary}</p>
+              <div class="card-meta">
+                {entry.data.skills.slice(0, 3).map((skill) => <span>{skill}</span>)}
+              </div>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ol>
+  </section>
+</SiteLayout>

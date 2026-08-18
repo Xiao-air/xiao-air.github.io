@@ -1,6 +1,14 @@
 ---
 import "../styles/global.css";
-import { homePath, languageSwitchPath, resumePath, type Locale } from "../lib/routes";
+import {
+  focusPath,
+  homePath,
+  languageSwitchPath,
+  resumePath,
+  skillsPath,
+  timelinePath,
+  type Locale
+} from "../lib/routes";
 import { profile } from "../lib/profile";
 
 interface Props {
@@ -8,13 +16,17 @@ interface Props {
   title: string;
   description: string;
   slug?: string;
+  switchPath?: string;
 }
 
-const { locale, title, description, slug } = Astro.props;
+const { locale, title, description, slug, switchPath: providedSwitchPath } = Astro.props;
 const isZh = locale === "zh";
-const switchPath = languageSwitchPath(locale, slug);
+const switchPath = providedSwitchPath ?? languageSwitchPath(locale, slug);
 const home = homePath(locale);
 const resume = resumePath(locale);
+const timeline = timelinePath(locale);
+const skills = skillsPath(locale);
+const focus = focusPath(locale);
 ---
 
 <!doctype html>
@@ -36,7 +48,9 @@ const resume = resumePath(locale);
         <span>{profile.name}</span>
       </a>
       <nav class="nav" aria-label={isZh ? "主导航" : "Main navigation"}>
-        <a href={home}>{isZh ? "时间线" : "Timeline"}</a>
+        <a href={timeline}>{isZh ? "时间线" : "Timeline"}</a>
+        <a href={skills}>{isZh ? "技能" : "Skills"}</a>
+        <a href={focus}>{isZh ? "方向" : "Focus"}</a>
         <a href={resume}>{isZh ? "简历" : "Resume"}</a>
         <a href={profile.githubUrl}>GitHub</a>
         <a class="language-link" href={switchPath}>{isZh ? "EN" : "中文"}</a>

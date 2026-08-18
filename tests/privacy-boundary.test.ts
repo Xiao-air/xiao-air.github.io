@@ -30,26 +30,19 @@ describe("public repository privacy boundary", () => {
     }
   });
 
-  it("documents the three public homepage sections", () => {
+  it("keeps the homepage as a clean gateway to the three public subinterfaces", () => {
     const homePage = fs.readFileSync(path.join(root, "src", "components", "HomePage.astro"), "utf8");
 
     expect(homePage).toContain("Career Timeline");
     expect(homePage).toContain("Skills & Credentials");
     expect(homePage).toContain("Current Focus");
-  });
-
-  it("lets visitors jump directly to each public career section", () => {
-    const homePage = fs.readFileSync(path.join(root, "src", "components", "HomePage.astro"), "utf8");
-
-    expect(homePage).toContain('href="#timeline"');
-    expect(homePage).toContain('href="#skills"');
-    expect(homePage).toContain('href="#focus"');
-  });
-
-  it("renders timeline entries as an ordered career ledger", () => {
-    const homePage = fs.readFileSync(path.join(root, "src", "components", "HomePage.astro"), "utf8");
-
-    expect(homePage).toContain('<ol class="timeline-list">');
-    expect(homePage).toContain("</ol>");
+    expect(homePage).toContain("timelinePath(locale)");
+    expect(homePage).toContain("skillsPath(locale)");
+    expect(homePage).toContain("focusPath(locale)");
+    expect(homePage).not.toContain("把经历整理成");
+    expect(homePage).not.toContain("headline-line");
+    expect(homePage).not.toContain("timeline-list");
+    expect(homePage).not.toContain("skill-category-list");
+    expect(homePage).not.toContain("focus-list");
   });
 });

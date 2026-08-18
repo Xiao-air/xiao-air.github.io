@@ -1,7 +1,7 @@
 ---
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { getCareerEntries } from "../../lib/career";
-import { careerPath } from "../../lib/routes";
+import { careerPath, timelinePath } from "../../lib/routes";
 
 export function getStaticPaths() {
   return getCareerEntries("zh").map((entry) => ({
@@ -21,7 +21,7 @@ const Content = entry.Content;
   description={entry.data.summary}
 >
   <article class="detail-page">
-    <a class="back-link" href="/">返回时间线</a>
+    <a class="back-link" href={timelinePath("zh")}>返回时间线</a>
     <header class="detail-header">
       <p class="period">{entry.data.period}</p>
       <h1>{entry.data.title}</h1>

@@ -97,39 +97,45 @@ main {
   font-weight: 700;
 }
 
-.intro-band {
+.home-shell {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
   gap: 24px;
   align-items: stretch;
-  padding: 56px 0 28px;
+  padding: 52px 0 24px;
 }
 
-.intro-copy,
+.home-identity,
 .identity-panel,
 .summary-grid,
 .timeline-card,
 .impact-box,
-.simple-page {
+.simple-page,
+.gateway-card,
+.section-page {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
 }
 
-.intro-copy {
+.home-identity {
   position: relative;
   overflow: hidden;
   padding: clamp(28px, 5vw, 56px);
   border-left: 8px solid var(--teal);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 300px;
 }
 
-.intro-copy > * {
+.home-identity > * {
   position: relative;
   z-index: 1;
 }
 
-.intro-copy::after {
+.home-identity::after {
   position: absolute;
   right: clamp(24px, 4vw, 48px);
   bottom: 8px;
@@ -200,14 +206,10 @@ p {
 h1 {
   max-width: 840px;
   margin-bottom: 20px;
-  font-size: clamp(2.2rem, 5vw, 4.15rem);
+  font-size: clamp(2.2rem, 5vw, 4.4rem);
   font-weight: 850;
   line-height: 1.08;
   letter-spacing: 0;
-}
-
-.headline-line {
-  display: block;
 }
 
 h2 {
@@ -268,6 +270,67 @@ h3 {
   gap: 28px;
   padding: 28px;
   margin-bottom: 42px;
+}
+
+.gateway-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 0 0 64px;
+}
+
+.gateway-card {
+  display: grid;
+  gap: 12px;
+  min-height: 180px;
+  padding: 24px;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.gateway-card span {
+  color: var(--clay);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.gateway-card strong {
+  align-self: end;
+  color: var(--ink);
+  font-size: clamp(1.3rem, 2vw, 1.75rem);
+  line-height: 1.15;
+}
+
+.gateway-card small {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.gateway-card:hover,
+.gateway-card:focus-visible {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+  box-shadow: 0 26px 60px rgba(31, 53, 48, 0.16);
+}
+
+.section-page {
+  margin: 42px auto 72px;
+  padding: clamp(28px, 4vw, 42px);
+}
+
+.section-page > .back-link {
+  margin-bottom: 24px;
+}
+
+.section-page h1 {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+}
+
+.panel-list {
+  margin-top: 24px;
 }
 
 .card-meta {
@@ -455,13 +518,14 @@ h3 {
     justify-content: flex-start;
   }
 
-  .intro-band,
+  .home-shell,
+  .gateway-grid,
   .summary-grid,
   .timeline-card {
     grid-template-columns: 1fr;
   }
 
-  .intro-band {
+  .home-shell {
     padding-top: 28px;
   }
 
@@ -480,7 +544,7 @@ h3 {
     width: 100%;
   }
 
-  .intro-copy::after {
+  .home-identity::after {
     display: none;
   }
 

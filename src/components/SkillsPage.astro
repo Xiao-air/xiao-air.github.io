@@ -1,0 +1,48 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { localize, skillCredentialCategories } from "../lib/public-profile";
+import { homePath, type Locale } from "../lib/routes";
+import { profile } from "../lib/profile";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const isZh = locale === "zh";
+const title = isZh ? `${profile.name} | 技能与资质` : `${profile.name} | Skills & Credentials`;
+const description = isZh
+  ? "语言、工具、工作能力与资质的公开索引。"
+  : "A public index of languages, tools, work skills, and credentials.";
+---
+
+<SiteLayout
+  locale={locale}
+  title={title}
+  description={description}
+  switchPath={locale === "zh" ? "/en/skills/" : "/skills/"}
+>
+  <section class="section-page">
+    <a class="back-link" href={homePath(locale)}>{isZh ? "返回首页" : "Back to home"}</a>
+    <div class="section-heading">
+      <p class="section-kicker">{isZh ? "技能与资质" : "Skills & Credentials"}</p>
+      <h1>{isZh ? "能力索引" : "Skills index"}</h1>
+    </div>
+    <div class="skill-category-list panel-list">
+      {skillCredentialCategories.map((category) => (
+        <section class="skill-category">
+          <h2>{localize(category.title, locale)}</h2>
+          <ul>
+            {category.items.map((item) => (
+              <li>
+                <strong>{localize(item.label, locale)}</strong>
+                {item.credential && <span>{localize(item.credential, locale)}</span>}
+                <p>{localize(item.description, locale)}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </section>
+</SiteLayout>
