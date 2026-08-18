@@ -20,13 +20,34 @@ const title = isZh ? `${profile.name} | 生涯回顾` : `${profile.name} | Caree
 const description = isZh
   ? "一个以职业时间线、技能资质和当前方向为核心的双语个人网站。"
   : "A bilingual personal site centered on career timeline, skills, credentials, and current focus.";
+const systemNotes = isZh
+  ? [
+      ["Public layer", "公开展示"],
+      ["Private vault", "私密复盘"],
+      ["Quarterly rhythm", "季度节奏"]
+    ]
+  : [
+      ["Public layer", "Presentation"],
+      ["Private vault", "Reflection"],
+      ["Quarterly rhythm", "Review cycle"]
+    ];
 ---
 
 <SiteLayout locale={locale} title={title} description={description}>
   <section class="intro-band">
     <div class="intro-copy">
       <p class="eyebrow">{isZh ? "Career Review / Resume Extension" : "Career Review / Resume Extension"}</p>
-      <h1>{isZh ? "把经历整理成可回顾、可证明、可规划的成长轨迹。" : "Turning experience into a timeline for reflection, evidence, and direction."}</h1>
+      <h1>
+        {isZh ? (
+          <>
+            <span class="headline-line">把经历整理成</span>
+            <span class="headline-line">可回顾、可证明、</span>
+            <span class="headline-line">可规划的成长轨迹。</span>
+          </>
+        ) : (
+          "Turning experience into a timeline for reflection, evidence, and direction."
+        )}
+      </h1>
       <p class="lede">
         {isZh
           ? "这里记录精选项目、技能资质和当前关注方向。公开页面只呈现可展示版本，完整复盘和具体计划保存在私密库中。"
@@ -35,6 +56,7 @@ const description = isZh
       <div class="actions" aria-label={isZh ? "主要链接" : "Primary links"}>
         <a class="button primary" href="#timeline">{isZh ? "查看时间线" : "View timeline"}</a>
         <a class="button" href="#skills">{isZh ? "技能资质" : "Skills"}</a>
+        <a class="button" href="#focus">{isZh ? "当前方向" : "Focus"}</a>
         <a class="button" href={resumePath(locale)}>{isZh ? "查看简历" : "Resume"}</a>
         <a class="button" href={profile.githubUrl}>GitHub</a>
       </div>
@@ -45,6 +67,14 @@ const description = isZh
         <p class="panel-label">{profile.handle}</p>
         <h2>{profile.name}</h2>
         <p>{isZh ? profile.roleZh : profile.roleEn}</p>
+      </div>
+      <div class="system-ledger" aria-label={isZh ? "系统结构摘要" : "System structure summary"}>
+        {systemNotes.map(([label, value]) => (
+          <div>
+            <span>{label}</span>
+            <strong>{value}</strong>
+          </div>
+        ))}
       </div>
     </aside>
   </section>
@@ -87,20 +117,22 @@ const description = isZh
       <p class="section-kicker">{isZh ? "职业时间线" : "Career Timeline"}</p>
       <h2>{isZh ? "精选项目 / 工作节点" : "Selected Project / Work Nodes"}</h2>
     </div>
-    <div class="timeline-list">
+    <ol class="timeline-list">
       {entries.map((entry) => (
-        <article class="timeline-card">
-          <div class="period">{entry.data.period}</div>
-          <div class="timeline-body">
-            <p class="role">{entry.data.role}</p>
-            <h3><a href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
-            <p>{entry.data.summary}</p>
-            <div class="card-meta">
-              {entry.data.skills.slice(0, 3).map((skill) => <span>{skill}</span>)}
+        <li class="timeline-item">
+          <article class="timeline-card">
+            <div class="period">{entry.data.period}</div>
+            <div class="timeline-body">
+              <p class="role">{entry.data.role}</p>
+              <h3><a href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
+              <p>{entry.data.summary}</p>
+              <div class="card-meta">
+                {entry.data.skills.slice(0, 3).map((skill) => <span>{skill}</span>)}
+              </div>
             </div>
-          </div>
-        </article>
+          </article>
+        </li>
       ))}
-    </div>
+    </ol>
   </section>
 </SiteLayout>

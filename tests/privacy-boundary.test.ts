@@ -37,4 +37,19 @@ describe("public repository privacy boundary", () => {
     expect(homePage).toContain("Skills & Credentials");
     expect(homePage).toContain("Current Focus");
   });
+
+  it("lets visitors jump directly to each public career section", () => {
+    const homePage = fs.readFileSync(path.join(root, "src", "components", "HomePage.astro"), "utf8");
+
+    expect(homePage).toContain('href="#timeline"');
+    expect(homePage).toContain('href="#skills"');
+    expect(homePage).toContain('href="#focus"');
+  });
+
+  it("renders timeline entries as an ordered career ledger", () => {
+    const homePage = fs.readFileSync(path.join(root, "src", "components", "HomePage.astro"), "utf8");
+
+    expect(homePage).toContain('<ol class="timeline-list">');
+    expect(homePage).toContain("</ol>");
+  });
 });
