@@ -8,6 +8,7 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
+    "privacy-check": "vitest run tests/career-content.test.ts tests/privacy-boundary.test.ts tests/public-profile.test.ts",
     "test": "vitest run"
   },
   "dependencies": {

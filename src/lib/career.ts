@@ -61,8 +61,3 @@ export function getCareerEntries(locale: Locale) {
 export function getCareerEntry(locale: Locale, slug: string) {
   return getCareerEntries(locale).find((entry) => entry.slug === slug);
 }
-
-export function getFeaturedSkills(locale: Locale) {
-  const skills = getCareerEntries(locale).flatMap((entry) => entry.data.skills);
-  return [...new Set(skills)].slice(0, 9);
-}

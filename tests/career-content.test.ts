@@ -7,6 +7,16 @@ import { describe, expect, it } from "vitest";
 const root = fileURLToPath(new URL("..", import.meta.url));
 const contentRoot = path.join(root, "src", "content", "career");
 const locales = ["zh", "en"] as const;
+const publicFrontmatterKeys = [
+  "evidence",
+  "impact",
+  "period",
+  "role",
+  "skills",
+  "summary",
+  "title",
+  "visibility"
+];
 
 interface ParsedEntry {
   slug: string;
@@ -44,6 +54,7 @@ describe("career markdown content", () => {
   it("publishes only safe public-facing fields", () => {
     for (const locale of locales) {
       for (const entry of readEntries(locale)) {
+        expect(Object.keys(entry.data).sort()).toEqual(publicFrontmatterKeys);
         expect(entry.data.visibility).toBe("public");
         expect(entry.data.title).toEqual(expect.any(String));
         expect(entry.data.summary).toEqual(expect.any(String));
@@ -52,9 +63,6 @@ describe("career markdown content", () => {
         expect(entry.data.impact).toEqual(expect.any(String));
         expect(entry.data.evidence).toEqual(expect.any(Array));
         expect(entry.data.skills).toEqual(expect.any(Array));
-        expect(entry.data).not.toHaveProperty("privateNotes");
-        expect(entry.data).not.toHaveProperty("salary");
-        expect(entry.data).not.toHaveProperty("manager");
       }
     }
   });

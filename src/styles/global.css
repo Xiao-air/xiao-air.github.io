@@ -50,8 +50,7 @@ main {
 .brand,
 .nav,
 .actions,
-.card-meta,
-.tag-cloud {
+.card-meta {
   display: flex;
   align-items: center;
 }
@@ -191,13 +190,11 @@ h3 {
   margin-bottom: 42px;
 }
 
-.tag-cloud,
 .card-meta {
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.tag-cloud span,
 .card-meta span {
   display: inline-flex;
   border-radius: 999px;
@@ -210,6 +207,55 @@ h3 {
 
 .direction-text {
   color: var(--muted);
+}
+
+.skill-category-list,
+.focus-list {
+  display: grid;
+  gap: 18px;
+}
+
+.skill-category h2,
+.focus-list h2 {
+  margin-bottom: 8px;
+  font-size: 1.05rem;
+  line-height: 1.25;
+}
+
+.skill-category ul {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill-category li {
+  display: grid;
+  gap: 4px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.skill-category strong {
+  color: var(--ink);
+}
+
+.skill-category span {
+  color: var(--clay);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.skill-category p,
+.focus-list p {
+  margin-bottom: 0;
+  color: var(--muted);
+}
+
+.focus-list article {
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
 }
 
 .timeline-section {

@@ -1,6 +1,11 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { getCareerEntries, getFeaturedSkills } from "../lib/career";
+import { getCareerEntries } from "../lib/career";
+import {
+  currentFocusThemes,
+  localize,
+  skillCredentialCategories
+} from "../lib/public-profile";
 import { careerPath, resumePath, type Locale } from "../lib/routes";
 import { profile } from "../lib/profile";
 
@@ -11,11 +16,10 @@ interface Props {
 const { locale } = Astro.props;
 const isZh = locale === "zh";
 const entries = getCareerEntries(locale);
-const skills = getFeaturedSkills(locale);
 const title = isZh ? `${profile.name} | 生涯回顾` : `${profile.name} | Career Timeline`;
 const description = isZh
-  ? "一个以职业时间线、项目复盘和成长证据为核心的双语个人网站。"
-  : "A bilingual personal site centered on career timeline, project reflection, and growth evidence.";
+  ? "一个以职业时间线、技能资质和当前方向为核心的双语个人网站。"
+  : "A bilingual personal site centered on career timeline, skills, credentials, and current focus.";
 ---
 
 <SiteLayout locale={locale} title={title} description={description}>
@@ -25,11 +29,12 @@ const description = isZh
       <h1>{isZh ? "把经历整理成可回顾、可证明、可规划的成长轨迹。" : "Turning experience into a timeline for reflection, evidence, and direction."}</h1>
       <p class="lede">
         {isZh
-          ? "这里记录精选项目、工作节点和能力主题。公开页面只呈现可展示版本，完整复盘和具体计划保存在私密库中。"
-          : "This site captures selected projects, work nodes, and capability themes. The public layer stays polished; full retrospectives and action plans remain private."}
+          ? "这里记录精选项目、技能资质和当前关注方向。公开页面只呈现可展示版本，完整复盘和具体计划保存在私密库中。"
+          : "This site captures selected projects, skills, credentials, and current focus. The public layer stays polished; full retrospectives and action plans remain private."}
       </p>
       <div class="actions" aria-label={isZh ? "主要链接" : "Primary links"}>
         <a class="button primary" href="#timeline">{isZh ? "查看时间线" : "View timeline"}</a>
+        <a class="button" href="#skills">{isZh ? "技能资质" : "Skills"}</a>
         <a class="button" href={resumePath(locale)}>{isZh ? "查看简历" : "Resume"}</a>
         <a class="button" href={profile.githubUrl}>GitHub</a>
       </div>
@@ -44,20 +49,36 @@ const description = isZh
     </aside>
   </section>
 
-  <section class="summary-grid" aria-label={isZh ? "能力摘要" : "Capability summary"}>
-    <div>
-      <p class="section-kicker">{isZh ? "能力标签" : "Capability Tags"}</p>
-      <div class="tag-cloud">
-        {skills.map((skill) => <span>{skill}</span>)}
+  <section class="summary-grid" aria-label={isZh ? "技能与当前方向" : "Skills and current focus"}>
+    <div id="skills">
+      <p class="section-kicker">{isZh ? "技能与资质" : "Skills & Credentials"}</p>
+      <div class="skill-category-list">
+        {skillCredentialCategories.map((category) => (
+          <section class="skill-category">
+            <h2>{localize(category.title, locale)}</h2>
+            <ul>
+              {category.items.map((item) => (
+                <li>
+                  <strong>{localize(item.label, locale)}</strong>
+                  {item.credential && <span>{localize(item.credential, locale)}</span>}
+                  <p>{localize(item.description, locale)}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
       </div>
     </div>
-    <div>
-      <p class="section-kicker">{isZh ? "未来方向" : "Future Direction"}</p>
-      <p class="direction-text">
-        {isZh
-          ? "继续建设 AI 辅助的个人职业系统，让项目复盘、能力缺口和未来规划保持在同一条清晰脉络中。"
-          : "Continue building an AI-assisted career system that keeps project retrospectives, capability gaps, and future planning in one coherent thread."}
-      </p>
+    <div id="focus">
+      <p class="section-kicker">{isZh ? "当前关注方向" : "Current Focus"}</p>
+      <div class="focus-list">
+        {currentFocusThemes.map((theme) => (
+          <article>
+            <h2>{localize(theme.title, locale)}</h2>
+            <p>{localize(theme.description, locale)}</p>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 
