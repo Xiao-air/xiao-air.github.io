@@ -1,6 +1,8 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { focusPath, resumePath, skillsPath, timelinePath, type Locale } from "../lib/routes";
+import { getCareerEntries } from "../lib/career";
+import { currentFocusThemes, localize, skillCredentialCategories } from "../lib/public-profile";
+import { careerPath, focusPath, resumePath, skillsPath, timelinePath, type Locale } from "../lib/routes";
 import { profile } from "../lib/profile";
 
 interface Props {
@@ -11,77 +13,130 @@ const { locale } = Astro.props;
 const isZh = locale === "zh";
 const title = isZh ? `${profile.name} | 生涯系统` : `${profile.name} | Career System`;
 const description = isZh
-  ? "一个以职业时间线、技能资质和当前方向为核心的双语个人网站。"
-  : "A bilingual personal site centered on career timeline, skills, credentials, and current focus.";
-const systemNotes = isZh
+  ? "Yichen Xiao 的公开个人主页与职业记录。"
+  : "Yichen Xiao's public personal homepage and career record.";
+const entries = getCareerEntries(locale);
+const selectedEntries = entries.slice(0, 4);
+const projectEntries = entries.slice(0, 3);
+const languageCredentials = skillCredentialCategories.find((category) => category.id === "languages")?.items ?? [];
+const highlightedSkills = skillCredentialCategories
+  .flatMap((category) => category.items)
+  .filter((item) => item.id !== "english-cet6" && item.id !== "french-delf-b2")
+  .slice(0, 6);
+const updates = isZh
   ? [
-      ["Public layer", "公开展示"],
-      ["Private vault", "私密复盘"],
-      ["Quarterly rhythm", "季度节奏"]
+      ["2026", "搭建公开个人主页与私密职业复盘系统。"],
+      ["2026", "持续整理项目经历、技能证据与未来方向。"]
     ]
   : [
-      ["Public layer", "Presentation"],
-      ["Private vault", "Reflection"],
-      ["Quarterly rhythm", "Review cycle"]
+      ["2026", "Built a public personal homepage and private career reflection system."],
+      ["2026", "Continuing to organize project experience, skills evidence, and future direction."]
     ];
-const entryCards = [
-  {
-    label: isZh ? "职业时间线" : "Career Timeline",
-    title: isZh ? "查看经历轨迹" : "Read the career ledger",
-    meta: isZh ? "项目 / 阶段 / 公开证据" : "Projects / stages / public evidence",
-    href: timelinePath(locale)
-  },
-  {
-    label: isZh ? "技能与资质" : "Skills & Credentials",
-    title: isZh ? "浏览能力索引" : "Scan skills and credentials",
-    meta: isZh ? "语言 / 工具 / 工作能力" : "Languages / tools / work skills",
-    href: skillsPath(locale)
-  },
-  {
-    label: isZh ? "当前关注方向" : "Current Focus",
-    title: isZh ? "了解当前 Focus" : "See current focus",
-    meta: isZh ? "方向级主题，不含任务清单" : "Direction-level themes, no task list",
-    href: focusPath(locale)
-  }
-];
 ---
 
 <SiteLayout locale={locale} title={title} description={description}>
-  <section class="home-shell">
-    <div class="home-identity">
-      <p class="eyebrow">{isZh ? "Career system" : "Career system"}</p>
-      <h1>{isZh ? "生涯档案" : "Career archive"}</h1>
-      <div class="actions" aria-label={isZh ? "主要链接" : "Primary links"}>
-        <a class="button primary" href={timelinePath(locale)}>{isZh ? "进入时间线" : "Open timeline"}</a>
-        <a class="button" href={resumePath(locale)}>{isZh ? "查看简历" : "Resume"}</a>
-        <a class="button" href={profile.githubUrl}>GitHub</a>
-      </div>
-    </div>
-    <aside class="identity-panel" aria-label={isZh ? "个人概览" : "Profile summary"}>
-      <img src={profile.avatarUrl} alt={profile.name} width="144" height="144" />
-      <div>
-        <p class="panel-label">{profile.handle}</p>
-        <h2>{profile.name}</h2>
-        <p>{isZh ? profile.roleZh : profile.roleEn}</p>
-      </div>
-      <div class="system-ledger" aria-label={isZh ? "系统结构摘要" : "System structure summary"}>
-        {systemNotes.map(([label, value]) => (
-          <div>
-            <span>{label}</span>
-            <strong>{value}</strong>
-          </div>
-        ))}
-      </div>
-    </aside>
-  </section>
+  <div class="profile-home">
+    <aside class="profile-sidebar" aria-label={isZh ? "个人信息" : "Profile"}>
+      <h1>{profile.name}</h1>
+      <p class="profile-role">{isZh ? profile.roleZh : profile.roleEn}</p>
 
-  <section class="gateway-grid" aria-label={isZh ? "子界面入口" : "Subinterface gateway"}>
-    {entryCards.map((card) => (
-      <a class="gateway-card" href={card.href}>
-        <span>{card.label}</span>
-        <strong>{card.title}</strong>
-        <small>{card.meta}</small>
-      </a>
-    ))}
-  </section>
+      <ul class="profile-links">
+        <li><a href={profile.githubUrl}>GitHub</a></li>
+        <li><a href={resumePath(locale)}>{isZh ? "简历" : "Resume"}</a></li>
+        <li><a href={timelinePath(locale)}>{isZh ? "职业时间线" : "Career Timeline"}</a></li>
+      </ul>
+
+      <section class="profile-side-section">
+        <h2>{isZh ? "语言" : "Languages"}</h2>
+        <ul>
+          {languageCredentials.map((item) => (
+            <li>
+              <span>{localize(item.label, locale)}</span>
+              {item.credential && <strong>{localize(item.credential, locale)}</strong>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    </aside>
+
+    <div class="profile-main">
+      <section class="profile-section">
+        <h2>{isZh ? "简介" : "About"}</h2>
+        <p>
+          {isZh
+            ? "这里记录我的公开职业经历、项目节点、技能资质与当前关注方向。更完整的复盘和未来计划保留在私密工作区，公开网站只呈现经过筛选的经历与证据。"
+            : "This site records my public career experience, selected project nodes, skills, credentials, and current focus. Fuller retrospectives and planning notes stay private; the public site only presents reviewed experience and evidence."}
+        </p>
+      </section>
+
+      <section class="profile-section">
+        <h2>{isZh ? "近期更新" : "Updates"}</h2>
+        <ul class="news-list">
+          {updates.map(([date, text]) => (
+            <li>
+              <time>{date}</time>
+              <span>{text}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="profile-section">
+        <div class="section-title-row">
+          <h2>{isZh ? "精选经历" : "Selected Experience"}</h2>
+          <a href={timelinePath(locale)}>{isZh ? "完整时间线" : "Full timeline"}</a>
+        </div>
+        <ol class="record-list">
+          {selectedEntries.map((entry) => (
+            <li>
+              <span class="record-date">{entry.data.period}</span>
+              <div>
+                <h3><a href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
+                <p>{entry.data.summary}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="profile-section">
+        <h2>{isZh ? "项目" : "Projects"}</h2>
+        <ul class="plain-link-list">
+          {projectEntries.map((entry) => (
+            <li>
+              <a href={careerPath(locale, entry.slug)}>{entry.data.title}</a>
+              <span>{entry.data.role}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="profile-section">
+        <div class="section-title-row">
+          <h2>{isZh ? "技能与资质" : "Skills & Credentials"}</h2>
+          <a href={skillsPath(locale)}>{isZh ? "查看全部" : "View all"}</a>
+        </div>
+        <ul class="tag-list">
+          {highlightedSkills.map((item) => (
+            <li>{localize(item.label, locale)}</li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="profile-section">
+        <div class="section-title-row">
+          <h2>{isZh ? "当前关注方向" : "Current Focus"}</h2>
+          <a href={focusPath(locale)}>{isZh ? "查看方向" : "View focus"}</a>
+        </div>
+        <ul class="topic-list">
+          {currentFocusThemes.map((theme) => (
+            <li>
+              <strong>{localize(theme.title, locale)}</strong>
+              <span>{localize(theme.description, locale)}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </div>
 </SiteLayout>

@@ -30,16 +30,22 @@ describe("public repository privacy boundary", () => {
     }
   });
 
-  it("keeps the homepage as a clean gateway to the three public subinterfaces", () => {
+  it("keeps the homepage as a restrained professional profile page", () => {
     const homePage = fs.readFileSync(path.join(root, "src", "components", "HomePage.astro"), "utf8");
 
-    expect(homePage).toContain("Career Timeline");
+    expect(homePage).toContain("profile-home");
+    expect(homePage).toContain("profile-sidebar");
+    expect(homePage).toContain("profile-main");
+    expect(homePage).toContain("Selected Experience");
     expect(homePage).toContain("Skills & Credentials");
     expect(homePage).toContain("Current Focus");
     expect(homePage).toContain("timelinePath(locale)");
     expect(homePage).toContain("skillsPath(locale)");
     expect(homePage).toContain("focusPath(locale)");
     expect(homePage).not.toContain("把经历整理成");
+    expect(homePage).not.toContain("home-shell");
+    expect(homePage).not.toContain("home-identity");
+    expect(homePage).not.toContain("gateway-card");
     expect(homePage).not.toContain("headline-line");
     expect(homePage).not.toContain("timeline-list");
     expect(homePage).not.toContain("skill-category-list");
