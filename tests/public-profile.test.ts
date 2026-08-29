@@ -1,9 +1,17 @@
 import { describe, expect, it } from "vitest";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { profile } from "../src/lib/profile";
 import {
   currentFocusThemes,
+  extracurricularTimeline,
+  groupHonorsByYear,
+  honorsAwards,
   skillCredentialCategories
 } from "../src/lib/public-profile";
 
+const root = fileURLToPath(new URL("..", import.meta.url));
 const locales = ["zh", "en"] as const;
 
 function expectLocalizedText(value: unknown) {
@@ -16,6 +24,57 @@ function expectLocalizedText(value: unknown) {
 }
 
 describe("public profile data", () => {
+  it("keeps the requested public identity and profile photo", () => {
+    expect(profile.displayName.zh).toBe("肖奕晨（Xiao Yichen）");
+    expect(profile.displayName.en).toBe("Yichen Xiao");
+    expect(profile.photoUrl).toBe("/profile-avatar.jpg");
+    expect(profile.avatarUrl).toBe("/profile-avatar.jpg");
+    expect(profile.email).toBe("xyc18158@163.com");
+    expect(profile.friendLinks.map((link) => link.url)).toEqual([
+      "https://github.com/Xiao-air",
+      "http://www.weigroupfudan.com/"
+    ]);
+    expect(profile.intro.zh).toContain("复旦大学高分子科学系");
+    expect(profile.education.length).toBe(2);
+    expect(profile.education[0].period).toBe("2022.09 - 2026.06");
+    expect(profile.education[1].period).toBe("2026.09 - 至今");
+    expect(profile.education[1].periodEn).toBe("2026.09 - Present");
+    expect(fs.existsSync(path.join(root, "public", "profile-avatar.jpg"))).toBe(true);
+    expect(fs.existsSync(path.join(root, "public", "profile-photo.png"))).toBe(false);
+  });
+
+  it("keeps extracurricular experience grouped by year and bilingual", () => {
+    expect(extracurricularTimeline.map((group) => group.year)).toEqual(["2022", "2023", "2024", "2025", "2026"]);
+    expect(extracurricularTimeline.flatMap((group) => group.items).length).toBe(11);
+
+    for (const group of extracurricularTimeline) {
+      for (const item of group.items) {
+        expect(item.id).toEqual(expect.any(String));
+        expectLocalizedText(item.title);
+        expectLocalizedText(item.role);
+      }
+    }
+  });
+
+  it("keeps honors and awards dated, bilingual, and populated", () => {
+    expect(honorsAwards.length).toBeGreaterThanOrEqual(22);
+    expect(honorsAwards[0].date).toBe("2026.07");
+    expect(honorsAwards.map((award) => award.date)).toContain("2023.11");
+
+    for (const award of honorsAwards) {
+      expect(award.date).toMatch(/^\d{4}\.\d{2}$/);
+      expectLocalizedText(award.title);
+    }
+  });
+
+  it("groups honors by year without changing their order", () => {
+    const groups = groupHonorsByYear();
+
+    expect(groups.map((group) => group.year)).toEqual(["2026", "2025", "2024", "2023"]);
+    expect(groups[0].items[0].date).toBe("2026.07");
+    expect(groups.flatMap((group) => group.items)).toEqual(honorsAwards);
+  });
+
   it("keeps skills and credentials structured and bilingual", () => {
     expect(skillCredentialCategories.length).toBeGreaterThanOrEqual(1);
 

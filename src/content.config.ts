@@ -6,11 +6,14 @@ const career = defineCollection({
     visibility: z.literal("public"),
     title: z.string(),
     period: z.string(),
-    role: z.string(),
     summary: z.string(),
-    impact: z.string(),
-    skills: z.array(z.string()),
-    evidence: z.array(z.string())
+    category: z.enum(["project", "extracurricular"]),
+    paper: z.object({
+      title: z.string(),
+      doi: z.string(),
+      journal: z.string(),
+      url: z.string()
+    }).optional()
   })
 });
 

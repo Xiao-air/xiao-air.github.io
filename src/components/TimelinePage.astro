@@ -1,6 +1,7 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
 import { getCareerEntries } from "../lib/career";
+import { extracurricularTimeline, groupHonorsByYear, honorsAwards, localize } from "../lib/public-profile";
 import { careerPath, homePath, type Locale } from "../lib/routes";
 import { profile } from "../lib/profile";
 
@@ -10,11 +11,16 @@ interface Props {
 
 const { locale } = Astro.props;
 const isZh = locale === "zh";
-const entries = getCareerEntries(locale);
-const title = isZh ? `${profile.name} | 职业时间线` : `${profile.name} | Career Timeline`;
+const projectEntries = getCareerEntries(locale, "project");
+const timelineGroups = {
+  project: projectEntries,
+  extracurricular: extracurricularTimeline
+};
+const honorYearGroups = groupHonorsByYear(honorsAwards);
+const title = isZh ? `${profile.name} | 职业时间线` : `${profile.nameEn} | Career Timeline`;
 const description = isZh
-  ? "精选项目与工作节点的公开时间线。"
-  : "A public timeline of selected projects and work nodes.";
+  ? "项目经历、社会活动与领导经历、荣誉奖项的公开时间线。"
+  : "A public timeline of projects, leadership, activities, and honors.";
 ---
 
 <SiteLayout
@@ -27,24 +33,93 @@ const description = isZh
     <a class="back-link" href={homePath(locale)}>{isZh ? "返回首页" : "Back to home"}</a>
     <div class="section-heading">
       <p class="section-kicker">{isZh ? "职业时间线" : "Career Timeline"}</p>
-      <h1>{isZh ? "精选项目 / 工作节点" : "Selected Project / Work Nodes"}</h1>
+      <h1><span class="heading-mark" aria-hidden="true">🧭</span>{isZh ? "经历时间线与荣誉" : "Experiences and Honors"}</h1>
     </div>
-    <ol class="timeline-list">
-      {entries.map((entry) => (
-        <li class="timeline-item">
-          <article class="timeline-card">
-            <div class="period">{entry.data.period}</div>
-            <div class="timeline-body">
-              <p class="role">{entry.data.role}</p>
-              <h3><a href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
-              <p>{entry.data.summary}</p>
-              <div class="card-meta">
-                {entry.data.skills.slice(0, 3).map((skill) => <span>{skill}</span>)}
-              </div>
-            </div>
-          </article>
-        </li>
-      ))}
-    </ol>
+    <div class="timeline-groups">
+      <section class="timeline-group" aria-labelledby="project-timeline-heading">
+        <div class="timeline-group-heading">
+          <h2 id="project-timeline-heading">
+            <span class="heading-mark" aria-hidden="true">🧪</span>{isZh ? "项目经历" : "Project Experience"}
+          </h2>
+        </div>
+        <ol class="timeline-list">
+          {timelineGroups.project.map((entry) => (
+            <li class="timeline-item">
+              <article class="timeline-card">
+                <div class="timeline-period">
+                  <strong>{entry.data.period}</strong>
+                </div>
+                <div class="timeline-body">
+                  <h3><a class="timeline-title-link" href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
+                  <p class="project-summary">{entry.data.summary}</p>
+                  {entry.data.paper && (
+                    <dl class="paper-list">
+                      <div>
+                        <dt>{isZh ? "论文" : "Paper"}</dt>
+                        <dd><a href={entry.data.paper.url}>{entry.data.paper.title}</a></dd>
+                      </div>
+                      <div>
+                        <dt>DOI</dt>
+                        <dd>{entry.data.paper.doi}</dd>
+                      </div>
+                      <div>
+                        <dt>{isZh ? "期刊" : "Journal"}</dt>
+                        <dd>{entry.data.paper.journal}</dd>
+                      </div>
+                    </dl>
+                  )}
+                </div>
+              </article>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="timeline-group" aria-labelledby="extracurricular-timeline-heading">
+        <div class="timeline-group-heading">
+          <h2 id="extracurricular-timeline-heading">
+            <span class="heading-mark" aria-hidden="true">🌱</span>{isZh ? "社会活动与领导经历" : "Leadership & Activities"}
+          </h2>
+        </div>
+        <ol class="year-list">
+          {timelineGroups.extracurricular.map((group) => (
+            <li class="year-item">
+              <div class="year-label">{group.year}</div>
+              <ul class="activity-list">
+                {group.items.map((item) => (
+                  <li>
+                    <span>{localize(item.title, locale)}</span>
+                    <strong>{localize(item.role, locale)}</strong>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section class="timeline-group" aria-labelledby="honors-timeline-heading">
+        <div class="timeline-group-heading">
+          <h2 id="honors-timeline-heading">
+            <span class="heading-mark" aria-hidden="true">🏅</span>{isZh ? "荣誉奖项" : "Honors & Awards"}
+          </h2>
+        </div>
+        <ol class="award-year-list">
+          {honorYearGroups.map((group) => (
+            <li class="award-year-group">
+              <h3 class="award-year-heading">{group.year}</h3>
+              <ol class="award-list">
+                {group.items.map((award) => (
+                  <li>
+                    <time>{award.date}</time>
+                    <span>{localize(award.title, locale)}</span>
+                  </li>
+                ))}
+              </ol>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
   </section>
 </SiteLayout>

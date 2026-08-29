@@ -20,6 +20,10 @@ export function focusPath(locale: Locale) {
   return locale === "zh" ? "/focus/" : "/en/focus/";
 }
 
+export function blogPath(locale: Locale) {
+  return locale === "zh" ? "/blog/" : "/en/blog/";
+}
+
 export function resumePath(locale: Locale) {
   return locale === "zh" ? "/resume/" : "/en/resume/";
 }

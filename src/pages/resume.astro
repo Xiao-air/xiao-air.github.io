@@ -10,7 +10,7 @@ import { profile } from "../lib/profile";
     <p>请在确认隐私边界后，将公开版本简历 PDF 放入 `public/resume/`，并把这里替换为下载链接。</p>
     <div class="actions">
       <a class="button primary" href={profile.githubUrl}>GitHub</a>
-      <span class="button">邮箱待添加</span>
+      <a class="button" href={`mailto:${profile.email}`}>Email</a>
     </div>
   </section>
 </SiteLayout>

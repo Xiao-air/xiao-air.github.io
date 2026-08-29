@@ -10,7 +10,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const isZh = locale === "zh";
-const title = isZh ? `${profile.name} | 当前关注方向` : `${profile.name} | Current Focus`;
+const title = isZh ? `${profile.name} | 当前关注方向` : `${profile.nameEn} | Current Focus`;
 const description = isZh
   ? "当前正在探索的方向级主题。"
   : "Direction-level themes currently being explored.";

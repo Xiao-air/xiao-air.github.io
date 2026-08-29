@@ -1,8 +1,8 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
 import { getCareerEntries } from "../lib/career";
-import { currentFocusThemes, localize, skillCredentialCategories } from "../lib/public-profile";
-import { careerPath, focusPath, resumePath, skillsPath, timelinePath, type Locale } from "../lib/routes";
+import { extracurricularTimeline, groupHonorsByYear, honorsAwards, localize } from "../lib/public-profile";
+import { careerPath, type Locale } from "../lib/routes";
 import { profile } from "../lib/profile";
 
 interface Props {
@@ -11,131 +11,154 @@ interface Props {
 
 const { locale } = Astro.props;
 const isZh = locale === "zh";
-const title = isZh ? `${profile.name} | 生涯系统` : `${profile.name} | Career System`;
+const title = isZh ? `${profile.name} | 个人主页` : `${profile.nameEn} | Personal Website`;
 const description = isZh
-  ? "Yichen Xiao 的公开个人主页与职业记录。"
-  : "Yichen Xiao's public personal homepage and career record.";
-const entries = getCareerEntries(locale);
-const selectedEntries = entries.slice(0, 4);
-const projectEntries = entries.slice(0, 3);
-const languageCredentials = skillCredentialCategories.find((category) => category.id === "languages")?.items ?? [];
-const highlightedSkills = skillCredentialCategories
-  .flatMap((category) => category.items)
-  .filter((item) => item.id !== "english-cet6" && item.id !== "french-delf-b2")
-  .slice(0, 6);
-const updates = isZh
-  ? [
-      ["2026", "搭建公开个人主页与私密职业复盘系统。"],
-      ["2026", "持续整理项目经历、技能证据与未来方向。"]
-    ]
-  : [
-      ["2026", "Built a public personal homepage and private career reflection system."],
-      ["2026", "Continuing to organize project experience, skills evidence, and future direction."]
-    ];
+  ? "肖奕晨的个人主页，记录科研探索、学习经历与项目时间线。"
+  : "Yichen Xiao's personal website for research explorations, learning experiences, and project timelines.";
+const projectEntries = getCareerEntries(locale, "project");
+const homeTimelineGroups = {
+  project: projectEntries,
+  extracurricular: extracurricularTimeline
+};
+const honorYearGroups = groupHonorsByYear(honorsAwards);
 ---
 
 <SiteLayout locale={locale} title={title} description={description}>
   <div class="profile-home">
     <aside class="profile-sidebar" aria-label={isZh ? "个人信息" : "Profile"}>
-      <h1>{profile.name}</h1>
-      <p class="profile-role">{isZh ? profile.roleZh : profile.roleEn}</p>
-
-      <ul class="profile-links">
-        <li><a href={profile.githubUrl}>GitHub</a></li>
-        <li><a href={resumePath(locale)}>{isZh ? "简历" : "Resume"}</a></li>
-        <li><a href={timelinePath(locale)}>{isZh ? "职业时间线" : "Career Timeline"}</a></li>
-      </ul>
-
-      <section class="profile-side-section">
-        <h2>{isZh ? "语言" : "Languages"}</h2>
-        <ul>
-          {languageCredentials.map((item) => (
-            <li>
-              <span>{localize(item.label, locale)}</span>
-              {item.credential && <strong>{localize(item.credential, locale)}</strong>}
-            </li>
-          ))}
-        </ul>
-      </section>
+      <div class="profile-identity">
+        <img
+          class="profile-photo"
+          src={profile.photoUrl}
+          alt={isZh ? "肖奕晨个人照片" : "Portrait of Yichen Xiao"}
+          loading="eager"
+        />
+        <div>
+          <p class="profile-label">Profile</p>
+          <h1 class="profile-name">{isZh ? profile.displayName.zh : profile.displayName.en}</h1>
+        </div>
+      </div>
+      <dl class="profile-facts">
+        <div>
+          <dt>{isZh ? "背景" : "Background"}</dt>
+          <dd>
+            <ul class="education-list">
+              {profile.education.map((item) => (
+                <li>
+                  <span>{isZh ? item.period : item.periodEn}</span>
+                  <strong>{isZh ? item.zh : item.en}</strong>
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+        <div>
+          <dt>{isZh ? "友情连接" : "Link"}</dt>
+          <dd>
+            <ul class="friend-link-list">
+              {profile.friendLinks.map((link) => (
+                <li><a class="external-link" href={link.url}>{isZh ? link.zh : link.en}</a></li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+        <div>
+          <dt>{isZh ? "个人邮箱" : "Email"}</dt>
+          <dd><a href={`mailto:${profile.email}`}>{profile.email}</a></dd>
+        </div>
+      </dl>
     </aside>
 
     <div class="profile-main">
       <section class="profile-section">
-        <h2>{isZh ? "简介" : "About"}</h2>
-        <p>
-          {isZh
-            ? "这里记录我的公开职业经历、项目节点、技能资质与当前关注方向。更完整的复盘和未来计划保留在私密工作区，公开网站只呈现经过筛选的经历与证据。"
-            : "This site records my public career experience, selected project nodes, skills, credentials, and current focus. Fuller retrospectives and planning notes stay private; the public site only presents reviewed experience and evidence."}
-        </p>
+        <h2><span class="heading-mark" aria-hidden="true">👋</span>{isZh ? "简介" : "About"}</h2>
+        <p class="intro-text">{profile.intro[locale]}</p>
       </section>
 
       <section class="profile-section">
-        <h2>{isZh ? "近期更新" : "Updates"}</h2>
-        <ul class="news-list">
-          {updates.map(([date, text]) => (
-            <li>
-              <time>{date}</time>
-              <span>{text}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
+        <h2><span class="heading-mark" aria-hidden="true">🧭</span>{isZh ? "时间线" : "Timeline"}</h2>
+        <div class="timeline-groups home-timeline-groups">
+          <section class="timeline-group" aria-labelledby="project-home-timeline-heading">
+            <div class="timeline-group-heading">
+              <h3 id="project-home-timeline-heading">
+                <span class="heading-mark" aria-hidden="true">🧪</span>{isZh ? "项目经历" : "Project Experience"}
+              </h3>
+            </div>
+            <ol class="timeline-list">
+              {homeTimelineGroups.project.map((entry) => (
+                <li class="timeline-item">
+                  <article class="timeline-card">
+                    <div class="timeline-period">
+                      <strong>{entry.data.period}</strong>
+                    </div>
+                    <div class="timeline-body">
+                      <h3><a class="timeline-title-link" href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
+                      <p class="project-summary">{entry.data.summary}</p>
+                      {entry.data.paper && (
+                        <dl class="paper-list">
+                          <div>
+                            <dt>{isZh ? "论文" : "Paper"}</dt>
+                            <dd><a href={entry.data.paper.url}>{entry.data.paper.title}</a></dd>
+                          </div>
+                          <div>
+                            <dt>DOI</dt>
+                            <dd>{entry.data.paper.doi}</dd>
+                          </div>
+                          <div>
+                            <dt>{isZh ? "期刊" : "Journal"}</dt>
+                            <dd>{entry.data.paper.journal}</dd>
+                          </div>
+                        </dl>
+                      )}
+                    </div>
+                  </article>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-      <section class="profile-section">
-        <div class="section-title-row">
-          <h2>{isZh ? "精选经历" : "Selected Experience"}</h2>
-          <a href={timelinePath(locale)}>{isZh ? "完整时间线" : "Full timeline"}</a>
+          <section class="timeline-group" aria-labelledby="extracurricular-home-timeline-heading">
+            <div class="timeline-group-heading">
+              <h3 id="extracurricular-home-timeline-heading">
+                <span class="heading-mark" aria-hidden="true">🌱</span>{isZh ? "社会活动与领导经历" : "Leadership & Activities"}
+              </h3>
+            </div>
+            <ol class="year-list">
+              {homeTimelineGroups.extracurricular.map((group) => (
+                <li class="year-item">
+                  <div class="year-label">{group.year}</div>
+                  <ul class="activity-list">
+                    {group.items.map((item) => (
+                      <li>
+                        <span>{localize(item.title, locale)}</span>
+                        <strong>{localize(item.role, locale)}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ol>
+          </section>
         </div>
-        <ol class="record-list">
-          {selectedEntries.map((entry) => (
-            <li>
-              <span class="record-date">{entry.data.period}</span>
-              <div>
-                <h3><a href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
-                <p>{entry.data.summary}</p>
-              </div>
+      </section>
+
+      <section class="profile-section">
+        <h2><span class="heading-mark" aria-hidden="true">🏅</span>{isZh ? "荣誉奖项" : "Honors & Awards"}</h2>
+        <ol class="award-year-list">
+          {honorYearGroups.map((group) => (
+            <li class="award-year-group">
+              <h3 class="award-year-heading">{group.year}</h3>
+              <ol class="award-list">
+                {group.items.map((award) => (
+                  <li>
+                    <time>{award.date}</time>
+                    <span>{localize(award.title, locale)}</span>
+                  </li>
+                ))}
+              </ol>
             </li>
           ))}
         </ol>
-      </section>
-
-      <section class="profile-section">
-        <h2>{isZh ? "项目" : "Projects"}</h2>
-        <ul class="plain-link-list">
-          {projectEntries.map((entry) => (
-            <li>
-              <a href={careerPath(locale, entry.slug)}>{entry.data.title}</a>
-              <span>{entry.data.role}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section class="profile-section">
-        <div class="section-title-row">
-          <h2>{isZh ? "技能与资质" : "Skills & Credentials"}</h2>
-          <a href={skillsPath(locale)}>{isZh ? "查看全部" : "View all"}</a>
-        </div>
-        <ul class="tag-list">
-          {highlightedSkills.map((item) => (
-            <li>{localize(item.label, locale)}</li>
-          ))}
-        </ul>
-      </section>
-
-      <section class="profile-section">
-        <div class="section-title-row">
-          <h2>{isZh ? "当前关注方向" : "Current Focus"}</h2>
-          <a href={focusPath(locale)}>{isZh ? "查看方向" : "View focus"}</a>
-        </div>
-        <ul class="topic-list">
-          {currentFocusThemes.map((theme) => (
-            <li>
-              <strong>{localize(theme.title, locale)}</strong>
-              <span>{localize(theme.description, locale)}</span>
-            </li>
-          ))}
-        </ul>
       </section>
     </div>
   </div>

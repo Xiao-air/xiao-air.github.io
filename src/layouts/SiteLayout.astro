@@ -1,11 +1,9 @@
 ---
 import "../styles/global.css";
 import {
-  focusPath,
+  blogPath,
   homePath,
   languageSwitchPath,
-  resumePath,
-  skillsPath,
   timelinePath,
   type Locale
 } from "../lib/routes";
@@ -23,10 +21,22 @@ const { locale, title, description, slug, switchPath: providedSwitchPath } = Ast
 const isZh = locale === "zh";
 const switchPath = providedSwitchPath ?? languageSwitchPath(locale, slug);
 const home = homePath(locale);
-const resume = resumePath(locale);
 const timeline = timelinePath(locale);
-const skills = skillsPath(locale);
-const focus = focusPath(locale);
+const blog = blogPath(locale);
+const displayName = isZh ? profile.name : profile.nameEn;
+const currentPath = Astro.url.pathname;
+const navItems = [
+  { href: timeline, label: isZh ? "时间线" : "Timeline" },
+  { href: blog, label: isZh ? "博客" : "Blog" }
+];
+
+function normalizePath(path: string) {
+  return path.endsWith("/") ? path : `${path}/`;
+}
+
+function isCurrentPath(path: string) {
+  return normalizePath(currentPath) === normalizePath(path);
+}
 ---
 
 <!doctype html>
@@ -39,19 +49,17 @@ const focus = focusPath(locale);
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <title>{title}</title>
-    <link rel="icon" href={`${profile.avatarUrl}?size=64`} />
+    <link rel="icon" href={profile.avatarUrl} />
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href={home} aria-label={isZh ? "返回首页" : "Back to home"}>
-        <span>{profile.name}</span>
+        <span>{displayName}</span>
       </a>
       <nav class="nav" aria-label={isZh ? "主导航" : "Main navigation"}>
-        <a href={timeline}>{isZh ? "时间线" : "Timeline"}</a>
-        <a href={skills}>{isZh ? "技能" : "Skills"}</a>
-        <a href={focus}>{isZh ? "方向" : "Focus"}</a>
-        <a href={resume}>{isZh ? "简历" : "Resume"}</a>
-        <a href={profile.githubUrl}>GitHub</a>
+        {navItems.map((item) => (
+          <a href={item.href} aria-current={isCurrentPath(item.href) ? "page" : undefined}>{item.label}</a>
+        ))}
         <a class="language-link" href={switchPath}>{isZh ? "EN" : "中文"}</a>
       </nav>
     </header>
@@ -59,12 +67,8 @@ const focus = focusPath(locale);
       <slot />
     </main>
     <footer class="footer">
-      <span>{profile.name} · {isZh ? "公开职业时间线" : "Public career timeline"}</span>
-      {profile.email ? (
-        <a href={`mailto:${profile.email}`}>{profile.email}</a>
-      ) : (
-        <span>{isZh ? "邮箱待添加" : "Email pending"}</span>
-      )}
+      <span>{displayName} · {isZh ? "个人主页" : "Personal website"}</span>
+      <a href={profile.githubUrl}>GitHub</a>
     </footer>
   </body>
 </html>

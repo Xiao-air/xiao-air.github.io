@@ -11,7 +11,6 @@ export function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const Content = entry.Content;
 ---
 
 <SiteLayout
@@ -25,21 +24,30 @@ const Content = entry.Content;
     <header class="detail-header">
       <p class="period">{entry.data.period}</p>
       <h1>{entry.data.title}</h1>
-      <p>{entry.data.summary}</p>
-      <div class="card-meta">
-        {entry.data.skills.map((skill) => <span>{skill}</span>)}
-      </div>
     </header>
-    <section class="impact-box">
-      <h2>公开成果</h2>
-      <p>{entry.data.impact}</p>
-      <ul>
-        {entry.data.evidence.map((item) => <li>{item}</li>)}
-      </ul>
+    <section class="detail-section">
+      <h2>项目简介</h2>
+      <p class="project-summary">{entry.data.summary}</p>
     </section>
-    <div class="markdown-body">
-      <Content />
-    </div>
+    {entry.data.paper && (
+      <section class="detail-section">
+        <h2>论文信息</h2>
+        <dl class="paper-list">
+          <div>
+            <dt>论文</dt>
+            <dd><a href={entry.data.paper.url}>{entry.data.paper.title}</a></dd>
+          </div>
+          <div>
+            <dt>DOI</dt>
+            <dd>{entry.data.paper.doi}</dd>
+          </div>
+          <div>
+            <dt>期刊</dt>
+            <dd>{entry.data.paper.journal}</dd>
+          </div>
+        </dl>
+      </section>
+    )}
     <a class="button" href={careerPath("en", entry.slug)}>Read in English</a>
   </article>
 </SiteLayout>

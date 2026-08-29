@@ -10,7 +10,7 @@ import { profile } from "../../lib/profile";
     <p>After reviewing privacy boundaries, place the public resume PDF in `public/resume/` and replace this page with the download link.</p>
     <div class="actions">
       <a class="button primary" href={profile.githubUrl}>GitHub</a>
-      <span class="button">Email pending</span>
+      <a class="button" href={`mailto:${profile.email}`}>Email</a>
     </div>
   </section>
 </SiteLayout>

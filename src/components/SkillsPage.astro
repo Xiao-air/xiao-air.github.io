@@ -10,7 +10,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const isZh = locale === "zh";
-const title = isZh ? `${profile.name} | 技能与资质` : `${profile.name} | Skills & Credentials`;
+const title = isZh ? `${profile.name} | 技能与资质` : `${profile.nameEn} | Skills & Credentials`;
 const description = isZh
   ? "语言、工具、工作能力与资质的公开索引。"
   : "A public index of languages, tools, work skills, and credentials.";
