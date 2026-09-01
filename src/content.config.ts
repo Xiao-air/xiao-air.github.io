@@ -17,4 +17,22 @@ const career = defineCollection({
   })
 });
 
-export const collections = { career };
+const blog = defineCollection({
+  type: "content",
+  schema: z.object({
+    visibility: z.enum(["public", "draft"]),
+    title: z.string(),
+    date: z.string(),
+    summary: z.string(),
+    category: z.string(),
+    tags: z.array(z.string()),
+    language: z.enum(["zh", "en"]),
+    originalFile: z.object({
+      label: z.string(),
+      url: z.string(),
+      type: z.enum(["pdf", "docx"])
+    }).optional()
+  })
+});
+
+export const collections = { career, blog };

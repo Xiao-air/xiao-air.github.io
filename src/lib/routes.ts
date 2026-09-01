@@ -24,6 +24,10 @@ export function blogPath(locale: Locale) {
   return locale === "zh" ? "/blog/" : "/en/blog/";
 }
 
+export function blogPostPath(locale: Locale, slug: string) {
+  return locale === "zh" ? `/blog/${slug}/` : `/en/blog/${slug}/`;
+}
+
 export function resumePath(locale: Locale) {
   return locale === "zh" ? "/resume/" : "/en/resume/";
 }

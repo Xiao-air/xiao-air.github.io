@@ -43,55 +43,55 @@ export interface HonorAwardYearGroup {
 
 export const extracurricularTimeline: ExtracurricularTimelineGroup[] = [
   {
-    year: "2022",
+    year: "2026",
     items: [
       {
-        id: "ecust-yva-new-media-member",
+        id: "hsy-lc-shenzhen-tf-manager-assistant",
         title: {
-          zh: "华东理工大学青年志愿者协会 新媒体部",
-          en: "ECUST Youth Volunteers Association, New Media Department"
+          zh: "哈佛 HSYLC 峰会-深圳",
+          en: "Harvard HSYLC Summit Shenzhen"
         },
         role: {
-          zh: "部员",
-          en: "Member"
+          zh: "TF Manager Assistant",
+          en: "TF Manager Assistant"
+        }
+      },
+      {
+        id: "ctb-shanghai-volunteer",
+        title: {
+          zh: "CTB 全球青年研究创新论坛-上海",
+          en: "CTB Global Youth Research and Innovation Forum Shanghai"
+        },
+        role: {
+          zh: "志愿者",
+          en: "Volunteer"
         }
       }
     ]
   },
   {
-    year: "2023",
+    year: "2025",
     items: [
       {
-        id: "ecust-yva-external-communications-lead",
+        id: "hsy-lc-shenzhen-tf-volunteer",
         title: {
-          zh: "华东理工大学青年志愿者协会 对外传讯中心",
-          en: "ECUST Youth Volunteers Association, External Communications Center"
+          zh: "哈佛 HSYLC 峰会-深圳",
+          en: "Harvard HSYLC Summit Shenzhen"
         },
         role: {
-          zh: "组长",
-          en: "Team Lead"
+          zh: "TF 志愿者",
+          en: "TF Volunteer"
         }
       },
       {
-        id: "iees-student-union-academic-head",
+        id: "ctb-global-fellow",
         title: {
-          zh: "华东理工大学国际卓越工程师学院学生会 学术部",
-          en: "Student Union Academic Department, International Elite Engineering School, ECUST"
+          zh: "CTB 全球青年研究创新论坛",
+          en: "CTB Global Youth Research and Innovation Forum"
         },
         role: {
-          zh: "部门负责人",
-          en: "Department Head"
-        }
-      },
-      {
-        id: "iees-freshman-supervisor",
-        title: {
-          zh: "华东理工大学国际卓越工程师学院",
-          en: "International Elite Engineering School, ECUST"
-        },
-        role: {
-          zh: "新生督导",
-          en: "Freshman Supervisor"
+          zh: "CTB Fellow",
+          en: "CTB Fellow"
         }
       }
     ]
@@ -135,55 +135,55 @@ export const extracurricularTimeline: ExtracurricularTimelineGroup[] = [
     ]
   },
   {
-    year: "2025",
+    year: "2023",
     items: [
       {
-        id: "hsy-lc-shenzhen-tf-volunteer",
+        id: "ecust-yva-external-communications-lead",
         title: {
-          zh: "哈佛 HSYLC 峰会-深圳",
-          en: "Harvard HSYLC Summit Shenzhen"
+          zh: "华东理工大学青年志愿者协会 对外传讯中心",
+          en: "ECUST Youth Volunteers Association, External Communications Center"
         },
         role: {
-          zh: "TF 志愿者",
-          en: "TF Volunteer"
+          zh: "组长",
+          en: "Team Lead"
         }
       },
       {
-        id: "ctb-global-fellow",
+        id: "iees-student-union-academic-head",
         title: {
-          zh: "CTB 全球青年研究创新论坛",
-          en: "CTB Global Youth Research and Innovation Forum"
+          zh: "华东理工大学国际卓越工程师学院学生会 学术部",
+          en: "Student Union Academic Department, International Elite Engineering School, ECUST"
         },
         role: {
-          zh: "CTB Fellow",
-          en: "CTB Fellow"
+          zh: "部门负责人",
+          en: "Department Head"
+        }
+      },
+      {
+        id: "iees-freshman-supervisor",
+        title: {
+          zh: "华东理工大学国际卓越工程师学院",
+          en: "International Elite Engineering School, ECUST"
+        },
+        role: {
+          zh: "新生督导",
+          en: "Freshman Supervisor"
         }
       }
     ]
   },
   {
-    year: "2026",
+    year: "2022",
     items: [
       {
-        id: "hsy-lc-shenzhen-tf-manager-assistant",
+        id: "ecust-yva-new-media-member",
         title: {
-          zh: "哈佛 HSYLC 峰会-深圳",
-          en: "Harvard HSYLC Summit Shenzhen"
+          zh: "华东理工大学青年志愿者协会 新媒体部",
+          en: "ECUST Youth Volunteers Association, New Media Department"
         },
         role: {
-          zh: "TF Manager Assistant",
-          en: "TF Manager Assistant"
-        }
-      },
-      {
-        id: "ctb-shanghai-volunteer",
-        title: {
-          zh: "CTB 全球青年研究创新论坛-上海",
-          en: "CTB Global Youth Research and Innovation Forum Shanghai"
-        },
-        role: {
-          zh: "志愿者",
-          en: "Volunteer"
+          zh: "部员",
+          en: "Member"
         }
       }
     ]

@@ -1,6 +1,7 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-import { homePath, type Locale } from "../lib/routes";
+import { getBlogPosts } from "../lib/blog";
+import { blogPostPath, homePath, type Locale } from "../lib/routes";
 import { profile } from "../lib/profile";
 
 interface Props {
@@ -13,6 +14,7 @@ const title = isZh ? `${profile.name} | 博客` : `${profile.nameEn} | Blog`;
 const description = isZh
   ? "肖奕晨的非学术文章入口。"
   : "A home for Yichen Xiao's non-academic writing.";
+const posts = getBlogPosts(locale);
 ---
 
 <SiteLayout
@@ -26,14 +28,30 @@ const description = isZh
     <div class="section-heading">
       <p class="section-kicker">{isZh ? "博客" : "Blog"}</p>
       <h1><span class="heading-mark" aria-hidden="true">✍️</span>{isZh ? "非学术文章" : "Non-Academic Writing"}</h1>
-    </div>
-    <div class="blog-note">
-      <h2>{isZh ? "文章整理中" : "Writing in progress"}</h2>
-      <p>
+      <p class="section-lead">
         {isZh
-          ? "这里将用于收纳科研之外的阅读、观察、生活记录与阶段性思考。"
-          : "This space will collect reading notes, observations, life records, and reflections outside academic work."}
+          ? "这里收纳科研之外的经验帖、观察与阶段性思考。"
+          : "Notes, guides, observations, and reflections beyond academic work."}
       </p>
     </div>
+    <ol class="blog-list">
+      {posts.map((post) => (
+        <li>
+          <article class="blog-card">
+            <div class="blog-card-meta">
+              <time>{post.data.date}</time>
+              <span>{post.data.category}</span>
+            </div>
+            <div class="blog-card-body">
+              <h2><a class="timeline-title-link" href={blogPostPath(locale, post.slug)}>{post.data.title}</a></h2>
+              <p>{post.data.summary}</p>
+              <ul class="tag-list" aria-label={isZh ? "文章标签" : "Post tags"}>
+                {post.data.tags.map((tag) => <li>{tag}</li>)}
+              </ul>
+            </div>
+          </article>
+        </li>
+      ))}
+    </ol>
   </section>
 </SiteLayout>

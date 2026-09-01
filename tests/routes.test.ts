@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   blogPath,
+  blogPostPath,
   careerPath,
   focusPath,
   homePath,
@@ -18,6 +19,7 @@ describe("localized routes", () => {
     expect(skillsPath("zh")).toBe("/skills/");
     expect(focusPath("zh")).toBe("/focus/");
     expect(blogPath("zh")).toBe("/blog/");
+    expect(blogPostPath("zh", "ppt-experience")).toBe("/blog/ppt-experience/");
     expect(careerPath("zh", exampleProjectSlug)).toBe(`/career/${exampleProjectSlug}/`);
   });
 
@@ -27,6 +29,7 @@ describe("localized routes", () => {
     expect(skillsPath("en")).toBe("/en/skills/");
     expect(focusPath("en")).toBe("/en/focus/");
     expect(blogPath("en")).toBe("/en/blog/");
+    expect(blogPostPath("en", "ppt-experience")).toBe("/en/blog/ppt-experience/");
     expect(careerPath("en", exampleProjectSlug)).toBe(`/en/career/${exampleProjectSlug}/`);
   });
 

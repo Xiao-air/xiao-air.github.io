@@ -1,0 +1,59 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { type BlogPost } from "../lib/blog";
+import { blogPath, blogPostPath, type Locale } from "../lib/routes";
+import { profile } from "../lib/profile";
+
+interface Props {
+  locale: Locale;
+  post: BlogPost;
+}
+
+const { locale, post } = Astro.props;
+const isZh = locale === "zh";
+const { Content } = post;
+const title = `${post.data.title} | ${isZh ? profile.name : profile.nameEn}`;
+const switchPath = blogPostPath(isZh ? "en" : "zh", post.slug);
+---
+
+<SiteLayout
+  locale={locale}
+  title={title}
+  description={post.data.summary}
+  switchPath={switchPath}
+>
+  <article class="detail-page blog-detail-page">
+    <a class="back-link" href={blogPath(locale)}>{isZh ? "返回博客" : "Back to blog"}</a>
+    <header class="detail-header blog-detail-header">
+      <p class="section-kicker">{isZh ? "博客文章" : "Blog Post"}</p>
+      <h1>{post.data.title}</h1>
+      <p>{post.data.summary}</p>
+      <dl class="blog-archive-meta" aria-label={isZh ? "文章信息" : "Article information"}>
+        <div>
+          <dt>{isZh ? "日期" : "Date"}</dt>
+          <dd>{post.data.date}</dd>
+        </div>
+        <div>
+          <dt>{isZh ? "分类" : "Category"}</dt>
+          <dd>{post.data.category}</dd>
+        </div>
+        <div>
+          <dt>{isZh ? "原文语言" : "Original Language"}</dt>
+          <dd>{post.data.language === "zh" ? "中文" : "English"}</dd>
+        </div>
+      </dl>
+      <ul class="tag-list" aria-label={isZh ? "文章标签" : "Post tags"}>
+        {post.data.tags.map((tag) => <li>{tag}</li>)}
+      </ul>
+      {post.data.originalFile && (
+        <div class="attachment-panel">
+          <span>{isZh ? "原始文件" : "Original File"}</span>
+          <a class="button primary" href={post.data.originalFile.url}>{post.data.originalFile.label}</a>
+        </div>
+      )}
+    </header>
+    <div class="blog-article-content">
+      <Content />
+    </div>
+  </article>
+</SiteLayout>
