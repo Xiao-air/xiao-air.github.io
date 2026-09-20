@@ -45,7 +45,13 @@ describe("public profile data", () => {
 
   it("keeps extracurricular experience grouped by year and bilingual", () => {
     expect(extracurricularTimeline.map((group) => group.year)).toEqual(["2026", "2025", "2024", "2023", "2022"]);
-    expect(extracurricularTimeline.flatMap((group) => group.items).length).toBe(12);
+    expect(extracurricularTimeline.flatMap((group) => group.items).length).toBe(13);
+    expect(extracurricularTimeline[0].items.map((item) => item.id)).toEqual([
+      "mep-volunteer",
+      "fudan-macromolecular-science-graduate-union-publicity-member",
+      "hsy-lc-shenzhen-tf-manager-assistant",
+      "ctb-shanghai-volunteer"
+    ]);
 
     for (const group of extracurricularTimeline) {
       for (const item of group.items) {

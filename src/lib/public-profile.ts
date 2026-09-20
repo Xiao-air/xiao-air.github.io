@@ -46,6 +46,28 @@ export const extracurricularTimeline: ExtracurricularTimelineGroup[] = [
     year: "2026",
     items: [
       {
+        id: "mep-volunteer",
+        title: {
+          zh: "第三届聚合物分子工程国际学术会议（MEP-2026）",
+          en: "3rd International Conference of Molecular Engineering of Polymers (MEP-2026)"
+        },
+        role: {
+          zh: "志愿者",
+          en: "Volunteer"
+        }
+      },
+      {
+        id: "fudan-macromolecular-science-graduate-union-publicity-member",
+        title: {
+          zh: "复旦大学高分子科学系研究生会宣传部",
+          en: "Publicity Department, Graduate Student Union, Department of Macromolecular Science, Fudan University"
+        },
+        role: {
+          zh: "部员",
+          en: "Member"
+        }
+      },
+      {
         id: "hsy-lc-shenzhen-tf-manager-assistant",
         title: {
           zh: "哈佛 HSYLC 峰会-深圳",
@@ -61,17 +83,6 @@ export const extracurricularTimeline: ExtracurricularTimelineGroup[] = [
         title: {
           zh: "CTB 全球青年研究创新论坛-上海",
           en: "CTB Global Youth Research and Innovation Forum Shanghai"
-        },
-        role: {
-          zh: "志愿者",
-          en: "Volunteer"
-        }
-      },
-      {
-        id: "mep-volunteer",
-        title: {
-          zh: "第三届聚合物分子工程国际学术会议（MEP-2026）",
-          en: "3rd International Conference of Molecular Engineering of Polymers (MEP-2026)"
         },
         role: {
           zh: "志愿者",
