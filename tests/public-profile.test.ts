@@ -45,7 +45,7 @@ describe("public profile data", () => {
 
   it("keeps extracurricular experience grouped by year and bilingual", () => {
     expect(extracurricularTimeline.map((group) => group.year)).toEqual(["2026", "2025", "2024", "2023", "2022"]);
-    expect(extracurricularTimeline.flatMap((group) => group.items).length).toBe(11);
+    expect(extracurricularTimeline.flatMap((group) => group.items).length).toBe(12);
 
     for (const group of extracurricularTimeline) {
       for (const item of group.items) {

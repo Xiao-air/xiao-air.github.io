@@ -66,6 +66,17 @@ export const extracurricularTimeline: ExtracurricularTimelineGroup[] = [
           zh: "志愿者",
           en: "Volunteer"
         }
+      },
+      {
+        id: "mep-volunteer",
+        title: {
+          zh: "第三届聚合物分子工程国际学术会议（MEP-2026）",
+          en: "3rd International Conference of Molecular Engineering of Polymers (MEP-2026)"
+        },
+        role: {
+          zh: "志愿者",
+          en: "Volunteer"
+        }
       }
     ]
   },
