@@ -1,5 +1,6 @@
 ---
 import SiteLayout from "../../layouts/SiteLayout.astro";
+import CareerFigures from "../../components/CareerFigures.astro";
 import { getCareerEntries } from "../../lib/career";
 import { careerPath, timelinePath } from "../../lib/routes";
 
@@ -29,6 +30,7 @@ const { entry } = Astro.props;
       <h2>项目简介</h2>
       <p class="project-summary">{entry.data.summary}</p>
     </section>
+    <CareerFigures slug={entry.slug} locale="zh" />
     {entry.data.paper && (
       <section class="detail-section">
         <h2>论文信息</h2>
