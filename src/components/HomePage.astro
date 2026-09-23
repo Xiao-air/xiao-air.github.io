@@ -1,5 +1,7 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import CareerFigures from "./CareerFigures.astro";
+import ProjectStageTabs from "./ProjectStageTabs.astro";
 import { getCareerEntries } from "../lib/career";
 import { extracurricularTimeline, groupHonorsByYear, honorsAwards, localize } from "../lib/public-profile";
 import { careerPath, type Locale } from "../lib/routes";
@@ -78,13 +80,11 @@ const honorYearGroups = groupHonorsByYear(honorsAwards);
       <section class="profile-section">
         <h2><span class="heading-mark" aria-hidden="true">🧭</span>{isZh ? "时间线" : "Timeline"}</h2>
         <div class="timeline-groups home-timeline-groups">
-          <section class="timeline-group" aria-labelledby="project-home-timeline-heading">
-            <div class="timeline-group-heading">
-              <h3 id="project-home-timeline-heading">
-                <span class="heading-mark" aria-hidden="true">🧪</span>{isZh ? "项目经历" : "Project Experience"}
-              </h3>
-            </div>
-            <ol class="timeline-list">
+          <ProjectStageTabs locale={locale} headingId="project-home-timeline-heading">
+            <h3 id="project-home-timeline-heading" slot="heading">
+              <span class="heading-mark" aria-hidden="true">🧪</span>{isZh ? "项目经历" : "Project Experience"}
+            </h3>
+            <ol class="timeline-list" slot="undergraduate">
               {homeTimelineGroups.project.map((entry) => (
                 <li class="timeline-item">
                   <article class="timeline-card">
@@ -94,6 +94,7 @@ const honorYearGroups = groupHonorsByYear(honorsAwards);
                     <div class="timeline-body">
                       <h3><a class="timeline-title-link" href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
                       <p class="project-summary">{entry.data.summary}</p>
+                      <CareerFigures slug={entry.slug} locale={locale} inline />
                       {entry.data.paper && (
                         <dl class="paper-list">
                           <div>
@@ -115,7 +116,7 @@ const honorYearGroups = groupHonorsByYear(honorsAwards);
                 </li>
               ))}
             </ol>
-          </section>
+          </ProjectStageTabs>
 
           <section class="timeline-group" aria-labelledby="extracurricular-home-timeline-heading">
             <div class="timeline-group-heading">

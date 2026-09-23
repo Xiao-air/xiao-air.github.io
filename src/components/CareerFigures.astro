@@ -5,21 +5,27 @@ import type { Locale } from "../lib/routes";
 interface Props {
   slug: string;
   locale: Locale;
+  inline?: boolean;
 }
 
-const { slug, locale } = Astro.props;
+const { slug, locale, inline = false } = Astro.props;
 const figures = careerFigures[slug] ?? [];
 const isZh = locale === "zh";
+const headingId = `${slug}-figures-heading`;
 ---
 
 {figures.length > 0 && (
-  <section class="detail-section career-figures" aria-labelledby="career-figures-heading">
-    <h2 id="career-figures-heading">{isZh ? "研究示意" : "Research Illustrations"}</h2>
-    <p class="figure-note">
-      {isZh
-        ? "AI生成·概念示意。点击图片可查看原图。"
-        : "AI-generated conceptual illustrations. Click an image to view the full-size version."}
-    </p>
+  <section class:list={["career-figures", { "detail-section": !inline, "is-inline": inline }]} aria-labelledby={inline ? undefined : headingId}>
+    {!inline && (
+      <>
+        <h2 id={headingId}>{isZh ? "研究示意" : "Research Illustrations"}</h2>
+        <p class="figure-note">
+          {isZh
+            ? "AI生成·概念示意。点击图片可查看原图。"
+            : "AI-generated conceptual illustrations. Click an image to view the full-size version."}
+        </p>
+      </>
+    )}
     {figures.map((figure) => (
       <figure>
         <a href={figure.src} target="_blank" rel="noopener">
@@ -41,6 +47,10 @@ const isZh = locale === "zh";
 <style>
   figure {
     margin: 24px 0 0;
+  }
+
+  .is-inline figure {
+    margin-top: 18px;
   }
 
   figure a {

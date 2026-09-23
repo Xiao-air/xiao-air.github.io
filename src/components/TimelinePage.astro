@@ -1,5 +1,7 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import CareerFigures from "./CareerFigures.astro";
+import ProjectStageTabs from "./ProjectStageTabs.astro";
 import { getCareerEntries } from "../lib/career";
 import { extracurricularTimeline, groupHonorsByYear, honorsAwards, localize } from "../lib/public-profile";
 import { careerPath, homePath, type Locale } from "../lib/routes";
@@ -36,13 +38,11 @@ const description = isZh
       <h1><span class="heading-mark" aria-hidden="true">🧭</span>{isZh ? "经历时间线与荣誉" : "Experiences and Honors"}</h1>
     </div>
     <div class="timeline-groups">
-      <section class="timeline-group" aria-labelledby="project-timeline-heading">
-        <div class="timeline-group-heading">
-          <h2 id="project-timeline-heading">
-            <span class="heading-mark" aria-hidden="true">🧪</span>{isZh ? "项目经历" : "Project Experience"}
-          </h2>
-        </div>
-        <ol class="timeline-list">
+      <ProjectStageTabs locale={locale} headingId="project-timeline-heading">
+        <h2 id="project-timeline-heading" slot="heading">
+          <span class="heading-mark" aria-hidden="true">🧪</span>{isZh ? "项目经历" : "Project Experience"}
+        </h2>
+        <ol class="timeline-list" slot="undergraduate">
           {timelineGroups.project.map((entry) => (
             <li class="timeline-item">
               <article class="timeline-card">
@@ -52,6 +52,7 @@ const description = isZh
                 <div class="timeline-body">
                   <h3><a class="timeline-title-link" href={careerPath(locale, entry.slug)}>{entry.data.title}</a></h3>
                   <p class="project-summary">{entry.data.summary}</p>
+                  <CareerFigures slug={entry.slug} locale={locale} inline />
                   {entry.data.paper && (
                     <dl class="paper-list">
                       <div>
@@ -73,7 +74,7 @@ const description = isZh
             </li>
           ))}
         </ol>
-      </section>
+      </ProjectStageTabs>
 
       <section class="timeline-group" aria-labelledby="extracurricular-timeline-heading">
         <div class="timeline-group-heading">

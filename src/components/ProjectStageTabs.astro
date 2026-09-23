@@ -1,0 +1,122 @@
+---
+import type { Locale } from "../lib/routes";
+
+interface Props {
+  locale: Locale;
+  headingId: string;
+}
+
+const { locale, headingId } = Astro.props;
+const isZh = locale === "zh";
+const phdId = `${headingId}-phd`;
+const undergraduateId = `${headingId}-undergraduate`;
+---
+
+<section class="timeline-group" aria-labelledby={headingId} data-project-stages>
+  <div class="timeline-group-heading stage-heading">
+    <slot name="heading" />
+    <div class="stage-tabs" role="tablist" aria-label={isZh ? "学习阶段" : "Study stage"}>
+      <button id={`${phdId}-tab`} type="button" role="tab" aria-controls={phdId} aria-selected="true">
+        {isZh ? "博士阶段" : "PhD"}
+      </button>
+      <button id={`${undergraduateId}-tab`} type="button" role="tab" aria-controls={undergraduateId} aria-selected="false" tabindex="-1">
+        {isZh ? "本科阶段" : "Undergraduate"}
+      </button>
+    </div>
+  </div>
+  <div id={phdId} role="tabpanel" aria-labelledby={`${phdId}-tab`} tabindex="0">
+    <p class="stage-empty">{isZh ? "博士阶段项目待更新。" : "PhD projects will be added here."}</p>
+  </div>
+  <div id={undergraduateId} role="tabpanel" aria-labelledby={`${undergraduateId}-tab`} tabindex="0" hidden>
+    <slot name="undergraduate" />
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-project-stages]").forEach((section) => {
+    const tabs = Array.from(section.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+    const panels = section.querySelectorAll<HTMLElement>('[role="tabpanel"]');
+
+    function activate(selected: HTMLButtonElement) {
+      tabs.forEach((tab) => {
+        tab.setAttribute("aria-selected", String(tab === selected));
+        tab.tabIndex = tab === selected ? 0 : -1;
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.id !== selected.getAttribute("aria-controls");
+      });
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => activate(tab));
+      tab.addEventListener("keydown", (event) => {
+        let next: number;
+        if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+        else if (event.key === "ArrowLeft") next = (index + tabs.length - 1) % tabs.length;
+        else if (event.key === "Home") next = 0;
+        else if (event.key === "End") next = tabs.length - 1;
+        else return;
+        event.preventDefault();
+        activate(tabs[next]);
+        tabs[next].focus();
+      });
+    });
+  });
+</script>
+
+<style>
+  .stage-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+  }
+
+  .stage-tabs {
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: 3px;
+    margin-left: auto;
+    padding: 3px;
+    border: 1px solid var(--color-line);
+    border-radius: 6px;
+    background: var(--color-wash);
+  }
+
+  button {
+    border: 1px solid transparent;
+    border-radius: 3px;
+    padding: 5px 10px;
+    background: transparent;
+    color: var(--color-muted);
+    font: inherit;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    cursor: pointer;
+  }
+
+  button[aria-selected="true"] {
+    border-color: var(--color-line);
+    background: var(--color-paper);
+    color: var(--color-link);
+    font-weight: 650;
+  }
+
+  button:focus-visible,
+  [role="tabpanel"]:focus-visible {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+
+  [hidden] {
+    display: none;
+  }
+
+  .stage-empty {
+    margin: 0;
+    padding: 18px 0;
+    color: var(--color-muted);
+    font-size: 0.94rem;
+  }
+</style>
